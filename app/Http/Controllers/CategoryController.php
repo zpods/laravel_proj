@@ -39,7 +39,7 @@ class CategoryController extends Controller
     public function getProductDetails($id)
     {
         $product = Product::with('images')->find($id);
-        return response()->json($product);
+        return response()->json($product, 200);
     }
 
 }

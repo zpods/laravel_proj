@@ -31,31 +31,45 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function createCart(Request $request)
     {
         $products = $request->post();
-        $user = Auth::user();       
-        foreach($products as $product){
-            if($product !== null){
-                $product_id = $product["product_id"];
-                $product_quantity =$product["pivot"]["quantity"];                  
-                $user->products()->syncWithoutDetaching([$product_id => ['quantity'=>$product_quantity]]);                
-            }            
-        }
+        //return($products);
+        $user = Auth::user();  
+        if($products){
+            foreach($products['cart'] as $product){
+                if($product !== null){
+                    $product_id = $product["product_id"];
+                    $product_quantity =$product["ordered"];                  
+                    $user->products()->syncWithoutDetaching([$product_id => ['quantity'=>$product_quantity]]);                
+                }            
+            }
+        }else{
+            $products = $user->products()->get();
+            foreach ($products as $product) {
+                $user->products()->detach($product->product_id);
+            }
+            return response()->json(['products_removed']);
+        }    
+        
         return response()->json(['products_added']);
     }
 
     /*check user cart (quantity of products) */
-    public function checkIfProductsInCartExists(){
+    public function getCart(){
+        $response = [];
         $user = Auth::user();
         
         if($user){
             $products = $user->products()->get();
-            return response()->json(['cart_products' => $products]);
-        }else{
-            return response()->json(['You are not login']);
+            foreach($products as $product){
+                $images = $product->images()->get();
+                $result = $product;
+                $product['images'] = $images;
+                array_push($response, $result);
+            }
+            return response()->json(['cart_products' => $response]);
         }
-        
     }
 
     /*remove all products from cart*/

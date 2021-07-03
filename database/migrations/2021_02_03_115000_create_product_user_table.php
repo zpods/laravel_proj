@@ -17,10 +17,10 @@ class CreateProductUserTable extends Migration
         Schema::dropIfExists('product_user');
         Schema::create('product_user', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('cartproduct_id')->unsigned();
-            $table->foreign('cartproduct_id')->references('product_id')->on('products');
-            $table->bigInteger('cartcustomer_id')->unsigned();
-            $table->foreign('cartcustomer_id')->references('customer_id')->on('users');
+            $table->bigInteger('product_product_id')->unsigned();
+            $table->foreign('product_product_id')->references('product_id')->on('products');
+            $table->bigInteger('user_customer_id')->unsigned();
+            $table->foreign('user_customer_id')->references('customer_id')->on('users');
             $table->timestamps();
         });
     }
@@ -36,9 +36,9 @@ class CreateProductUserTable extends Migration
             Schema::table('product_user', function (Blueprint $table) {
 
 
-                $table->dropForeign('product_user_cartproduct_id_foreign');
+                $table->dropForeign('product_user_product_product_id_foreign');
 
-                $table->dropForeign('product_user_cartcustomer_id_foreign');
+                $table->dropForeign('product_user_user_customer_id_foreign');
 
 
             });

@@ -27,7 +27,7 @@ class AuthController extends Controller
         $fields = $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string|confirmed|min:8'
         ]);
 
         $user = User::create([
@@ -80,11 +80,13 @@ class AuthController extends Controller
     /**
      * Logout User
      */
-    public function logout(Request $request){
-        auth()->user()->tokens()->delete();
+    public function logoutUser(Request $request){
+        if ($request->user()) { 
+            $request->user()->tokens()->delete();
+        }
 
-        return json([
+        return response([
             'message' => 'Logged out'
-        ]);
+        ], 200);
     }
 }
