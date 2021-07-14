@@ -14,7 +14,5 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::view('/{path?}', function () {
-   return view('app');
-});
+Route::view('/{path?}', 'app');
 
